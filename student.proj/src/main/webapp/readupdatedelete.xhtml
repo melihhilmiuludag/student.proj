@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head><title>melihhilmiuludag-readupdatedelete</title></h:head>
+
+
+<h:body>
+    <p:growl id="growl" showDetail="true" life="3000" autoUpdate="true"/>
+    <p:messages id="messages"/>
+
+
+
+    <h:form id="form">
+        <p:dataTable id="dtStudent" value="#{studentController.list}"
+                     var="student" editable="true" paginator="true" paginatorPosition="bottom" rows="8"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+
+            <p:ajax event="rowEdit" listener="#{studentController.onRowEdit}"
+                    update=":form:dtStudent"/>
+
+
+            <p:column headerText="Student ID" sortBy="#{student.id}" style="display: none">
+                <h:outputText value="#{student.id}"/>
+            </p:column>
+
+            <p:column headerText="Name" filterBy="#{student.name}">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{student.name}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{student.name}" style="width:90%" maxlength="50" required="true"
+                                     requiredMessage="Name is required."/>
+                    </f:facet>
+                </p:cellEditor>
+
+            </p:column>
+
+            <p:column headerText="Surname">
+
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{student.surname}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{student.surname}" style="width:90%" maxlength="50" required="true"
+                                     requiredMessage="Surname is required."/>
+                    </f:facet>
+                </p:cellEditor>
+
+
+            </p:column>
+
+            <p:column headerText="MailAdress" filterBy="#{student.mail}">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{student.mail}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{student.mail}" style="width:90%" required="true"
+                                     requiredMessage="Mail not empty." validatorMessage="Mail is not valid.">
+                            <f:validateRegex
+                                    pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+
+                        </p:inputText>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="CellPhone">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{student.phoneNumber}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{student.phoneNumber}" style="width:90%" required="true"
+                                     requiredMessage="Phone Number not empty." validatorMessage="Not valid." maxlength="13">
+                            <f:validateLength minimum="10" />
+                        </p:inputText>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="City">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{student.cityDesc}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <h:inputText value="#{student.cityDesc}" readonly="true"/>
+                    </f:facet>
+
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="District">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{student.districtDesc}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <h:inputText value="#{student.districtDesc}" readonly="true"/>
+                    </f:facet>
+
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Delete">
+                <p:commandButton id="delete" value="Delete" update=":form:dtStudent"
+                                 actionListener="#{studentController.delete(student)}">
+                    <p:confirm header="Confirmation" message="Are you sure delete row?"
+                               icon="pi pi-exclamation-triangle"/>
+                    <!--                    <p:ajax event="click" update=":form:dtStudent" listener="#{studentController.delete(student)}" />-->
+                </p:commandButton>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+                </p:confirmDialog>
+            </p:column>
+
+            <p:column headerText="Update">
+                <p:rowEditor/>
+            </p:column>
+
+        </p:dataTable>
+
+    </h:form>
+
+</h:body>
+</html>

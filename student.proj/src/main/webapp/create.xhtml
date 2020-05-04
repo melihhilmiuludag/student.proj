@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html">-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>melihhilmiuludag-student.proj</title>
+    <link rel="stylesheet" href="${request.contextPath}/META-INF/primefaces-blitzer/theme.css" type="text/css"/>
+</h:head>
+<!--<style type="text/css">-->
+<!--    .ui-panelgrid.showcase-text-align-center .ui-grid-responsive .ui-panelgrid-cell {-->
+<!--        text-align: center;-->
+<!--    }-->
+
+<!--    .customPanelGrid .ui-panelgrid-content {-->
+<!--        align-items: center;-->
+<!--    }-->
+<!--</style>-->
+
+<script type="text/javascript">
+    //<![CDATA[
+    /**
+     * Faces Validator
+     */
+    PrimeFaces.validator['custom.emailValidator'] = {
+
+        pattern: /\S+@\S+/,
+
+        validate: function(element, value) {
+            //use element.data() to access validation metadata, in this case there is none.
+            if(!this.pattern.test(value)) {
+                throw {
+                    summary: 'Validation Error',
+                    detail: value + ' is not a valid email.'
+                }
+            }
+        }
+    };
+
+    /**
+     * Bean validator
+     */
+    PrimeFaces.validator['Email'] = {
+
+        pattern: /\S+@\S+/,
+
+        MESSAGE_ID: 'org.primefaces.examples.validate.email.message',
+
+        validate: function(element, value) {
+            var vc = PrimeFaces.util.ValidationContext;
+
+            if(!this.pattern.test(value)) {
+                var msgStr = element.data('p-email-msg'),
+                    msg = msgStr ? {summary:msgStr, detail: msgStr} : vc.getMessage(this.MESSAGE_ID);
+
+                throw msg;
+            }
+        }
+    };
+    //]]>
+</script>
+
+
+<f:view>
+
+
+</f:view>
+<h:body>
+<h:form>
+<h1>Create Student</h1>
+
+    <p:growl id="growl" showDetail="true" life="3000" autoUpdate="true"  />
+    <p:messages id="messages" />
+
+<p:panelGrid columns="4" layout="tabular"
+             columnClasses="p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4, p-col-12 p-md-3 p-xl-2, p-col-12 p-md-9 p-xl-4"
+             styleClass="customPanelGrid" contentStyleClass="ui-fluid">
+    <p:outputLabel for="name" value="Name"/>
+    <p:inputText id="name" placeholder="Name" required="true" maxlength="50"  value="#{studentController.mappingDto.name}"/>
+
+    <p:outputLabel for="surname" value="Surname"/>
+    <p:inputText id="surname" placeholder="Surname" required="true" maxlength="50" value="#{studentController.mappingDto.surname}"/>
+
+
+    <p:outputLabel for="email" value="Mail Adress"/>
+<!--    <p:inputText id="email" placeholder="prefixName(@)mail.com" required="true" maxlength="50" validatorMessage="Invalid Email Format!" value="#{studentController.mappingDto.mail}">-->
+    <p:inputText id="email" placeholder="prefixName(@)mail.com"  maxlength="50" value="#{studentController.mappingDto.mail}">
+        <f:validateRegex
+                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+    </p:inputText>
+
+    <p:outputLabel for="phoneNumber" value="Phone Number"/>
+    <p:inputText id="phoneNumber" placeholder=" +9PhoneNumber"  maxlength="13"  value="#{studentController.mappingDto.phoneNumber}">
+        <f:validateRegex pattern="^[+]?[0-9]+$" />
+        <f:validateLength minimum="10" />
+    </p:inputText>
+    <p:outputLabel for="city" value="City"/>
+    <p:selectOneMenu id="city" value="#{studentController.mappingDto.city}" required="true" >
+        <p:ajax listener="#{studentController.onCityChange}" update="district" />
+        <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="false" />
+        <f:selectItems value="#{cityController.citiesMap.entrySet()}" var="c" itemLabel="#{c.value}" itemValue="#{c.key}" />
+    </p:selectOneMenu>
+
+    <p:outputLabel for="district" value="District"/>
+    <p:selectOneMenu id="district" value="#{studentController.mappingDto.district}" required="true">
+        <f:selectItem itemLabel="Select District" itemValue="" noSelectionOption="false" />
+        <f:selectItems value="#{studentController.districtMap.entrySet()}" var="c" itemLabel="#{c.value}" itemValue="#{c.key}" />
+    </p:selectOneMenu>
+
+
+    <p:outputLabel for="detailAdress" value="Detail Adress"/>
+    <p:inputTextarea id="detailAdress" placeholder="Detail Adress" required="true" maxlength="500"  value="#{studentController.mappingDto.desc}"/>
+
+
+
+
+</p:panelGrid>
+
+    <p:panel header="Transactions">
+
+
+        <p:commandButton value="Save" id="save" actionListener="#{studentController.create()}"
+                         style="margin-right:20px;" icon="pi pi-save" validateClient="false"/>
+
+
+    </p:panel>
+
+</h:form>
+    <p:panelGrid columns="1" layout="tabular">
+
+
+
+    </p:panelGrid>
+    <p:panel header="Go to">
+
+        <h:form>
+            <p:commandButton id="dynaButton" value="Start" type="button" icon="pi pi-home"/>
+            <p:slideMenu overlay="true" trigger="dynaButton" my="left top" at="left bottom" style="width:400px;">
+                <p:submenu label="CRUD Operations" style="height: 30px;">
+                    <p:menuitem value="Read, Update, Delete" action="#{pageView.readupdatedelete}"  icon="pi pi-refresh"/>
+                </p:submenu>
+                <p:submenu label="Other" style="height: 30px;">
+                    <p:menuitem value="File Upload" action="#{pageView.fileupload}"  icon="pi pi-save"/>
+                </p:submenu>
+            </p:slideMenu>
+        </h:form>
+    </p:panel>
+
+
+</h:body>
+<!--<p:commandButton value="btnAddPerson" update=":form:dtPerson" actionListener="#{personBean.onAddPerson()}"/>-->
+</html>
