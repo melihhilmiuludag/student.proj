@@ -4,5 +4,5 @@ Champions League :)SpringBoot&Primefaces CRUD Operations.  This project technolo
 
 
 Embedded Tomcat with
-Spring boot main class run than http://localhost:8084/melihhilmiuludag/index.xhtml
+Spring boot main class run for http://localhost:8084/melihhilmiuludag/index.xhtml
 
